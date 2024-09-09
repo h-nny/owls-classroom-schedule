@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 2px solid #e0e0e0;
 }
@@ -29,14 +29,14 @@
   position: absolute;
   background-color: transparent;
   border: none;
-  top: 0px;
-  right: 0px;
+  top: 4px;
+  right: 4px;
   font-size: 20px;
   cursor: pointer;
   padding: 8px;
   background-color: #f9f9f9;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;

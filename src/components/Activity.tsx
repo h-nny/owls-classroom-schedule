@@ -25,8 +25,8 @@ interface Activity {
 }
 
 const activityOptions = [
-  'OUR DAY', 'MORNING WORK', 'CIRCLE', 'SNACK', 'BATHROOM', 'CENTERS/SMALL GROUP',
-  'CENTERS', 'RECESS', 'DISMISSAL', 'LUNCH', 'NAP', 'ART', 'MUSIC', 'GYM'
+  'OUR DAY', 'MORNING WORK', 'CIRCLE', 'SNACK', 'BATHROOM', 'CENTERS SG',
+  'CENTERS', 'RECESS', 'GO HOME', 'NAP', 'ART', 'MUSIC', 'GYM'
 ];
 
 const getImagePath = (activity: string): string => {
