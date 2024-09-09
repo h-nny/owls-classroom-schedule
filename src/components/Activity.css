@@ -1,0 +1,149 @@
+.schedule {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.schedule-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.our-day-image {
+  max-width: 14vw;
+  height: auto;
+  margin-bottom: 10px;
+}
+
+.edit-button {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  top: 0px;
+  right: 0px;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 8px;
+  background-color: #f9f9f9;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  color: #777;
+}
+
+.edit-button:hover {
+  background-color: rgb(207, 207, 207);
+}
+
+.edit-button.editing {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.edit-button.editing:hover {
+  background-color: #45a049;
+}
+  
+  .activity-list {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  
+  .activity-item {
+    position: relative;
+    width: 90%;
+    margin: 10px auto;
+    background-color: #ffffff;
+    border-radius: 8px;
+    cursor: move;
+    touch-action: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .activity-item:not(:active) {
+    transition: all 0.2s ease;
+  }
+  
+  .activity-item:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .activity-item.dragging {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .activity-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    border-radius: 8px;
+  }
+  
+  .remove-button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+  }
+  
+  .remove-button:hover {
+    background-color: #d32f2f;
+    transform: scale(1.1);
+  }
+  
+  .add-activity-container {
+    margin-top: 20px;
+  }
+  
+  .add-activity-select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .add-activity-select:hover {
+    border-color: #bdbdbd;
+  }
+  
+  .add-activity-select:focus {
+    outline: none;
+    border-color: #2196F3;
+    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+  }

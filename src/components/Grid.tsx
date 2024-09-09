@@ -18,8 +18,8 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
   useEffect(() => {
     const fetchLetterImages = async () => {
       const letter = weeklyData.letter;
-      const img1 = `/assets/letters/images/${letter}1.png`;
-      const img2 = `/assets/letters/images/${letter}2.png`;
+      const img1 = `/assets/letters/images/${letter}/1.png`;
+      const img2 = `/assets/letters/images/${letter}/2.png`;
 
       const results = await Promise.all([
         fetch(img1).then(res => res.ok ? img1 : null),

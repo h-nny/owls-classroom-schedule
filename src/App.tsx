@@ -33,7 +33,12 @@ function App() {
         </button>
       </header>
       <div className="App-content">
-        <Grid weeklyData={weeklyData} />
+        <div className="grid-container">
+          <Grid weeklyData={weeklyData} />
+        </div>
+        <div className="schedule-container">
+          <Schedule />
+        </div>
       </div>
       {isEditModalOpen && (
         <EditModal

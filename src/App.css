@@ -28,11 +28,21 @@
 }
 
 .App-content {
-  flex-grow: 1;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-grow: 1;
   overflow: hidden;
+}
+
+.grid-container {
+  flex: 5;
+  overflow: auto;
+}
+
+.schedule-container {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+  border-left: 1px solid #ccc;
 }
 
 .modal {
