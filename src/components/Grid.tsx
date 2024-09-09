@@ -63,7 +63,9 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
   const renderLetterImages = (isExpanded: boolean) => (
     <div className={`letter-images ${isExpanded ? 'expanded' : ''}`}>
       {letterImages.map((img, index) => (
-        <img key={index} src={img} alt={`Letter of the week ${index + 1}`} />
+        <div key={index} className="image-container letter-container">
+          <img src={img} alt={`Letter of the week ${index + 1}`} />
+        </div>
       ))}
     </div>
   );
@@ -75,7 +77,7 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
       return (
         <div className="expanded-item">
           <button className="back-button" onClick={handleBackClick}>
-            Back
+            ←
           </button>
           {item === 'Letter' ? renderLetterImages(true) : (
             <img src={imagePath} alt={`${item} of the week`} />
@@ -87,13 +89,17 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
       );
     }
     return (
-      <div className="grid-item" onClick={() => handleItemClick(item)}>
+      <div className="grid-item">
         <h3>{item} of the Week</h3>
-        <div className="image-container">
-          {item === 'Letter' ? renderLetterImages(false) : (
+        {item === 'Letter' ? (
+          <div className="letter-wrapper" onClick={() => handleItemClick(item)}>
+            {renderLetterImages(false)}
+          </div>
+        ) : (
+          <div className="image-container" onClick={() => handleItemClick(item)}>
             <img src={imagePath} alt={`${item} of the week`} />
-          )}
-        </div>
+          </div>
+        )}
       </div>
     );
   };
