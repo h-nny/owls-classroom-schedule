@@ -6,7 +6,7 @@ import EditModal from './components/EditModal';
 
 interface WeeklyData {
   letter: string;
-  number: number;aw
+  number: number;
   color: string;
   shape: string;
 }
@@ -34,7 +34,6 @@ function App() {
       </header>
       <div className="App-content">
         <Grid weeklyData={weeklyData} />
-        <Schedule />
       </div>
       {isEditModalOpen && (
         <EditModal

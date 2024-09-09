@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import './Grid.css';
 
 interface GridProps {
   weeklyData: {
@@ -11,40 +12,100 @@ interface GridProps {
 
 const Grid: React.FC<GridProps> = ({ weeklyData }) => {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
+  const [letterImages, setLetterImages] = useState<string[]>([]);
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  useEffect(() => {
+    const fetchLetterImages = async () => {
+      const letter = weeklyData.letter;
+      const img1 = `/assets/letters/images/${letter}1.png`;
+      const img2 = `/assets/letters/images/${letter}2.png`;
+
+      const results = await Promise.all([
+        fetch(img1).then(res => res.ok ? img1 : null),
+        fetch(img2).then(res => res.ok ? img2 : null)
+      ]);
+
+      setLetterImages(results.filter(Boolean) as string[]);
+    };
+
+    fetchLetterImages();
+  }, [weeklyData.letter]);
 
   const handleItemClick = (item: string) => {
     setExpandedItem(item);
+    if (item === 'Letter' && audioRef.current) {
+      audioRef.current.play();
+    }
   };
 
   const handleBackClick = () => {
     setExpandedItem(null);
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.currentTime = 0;
+    }
   };
 
+  const getImagePath = (item: string, content: string | number): string => {
+    switch (item) {
+      case 'Number':
+        return `/assets/numbers/${content}.png`;
+      case 'Color':
+        return `/assets/colors/${content}.png`;
+      case 'Shape':
+        return `/assets/shapes/${content}.png`;
+      default:
+        return '';
+    }
+  };
+
+  const renderLetterImages = (isExpanded: boolean) => (
+    <div className={`letter-images ${isExpanded ? 'expanded' : ''}`}>
+      {letterImages.map((img, index) => (
+        <img key={index} src={img} alt={`Letter of the week ${index + 1}`} />
+      ))}
+    </div>
+  );
+
   const renderGridItem = (item: string, content: string | number) => {
+    const imagePath = getImagePath(item, content);
+
     if (expandedItem === item) {
       return (
         <div className="expanded-item">
           <button className="back-button" onClick={handleBackClick}>
             Back
           </button>
-          <img src={`/images/${item.toLowerCase()}.png`} alt={`${item} of the week`} />
+          {item === 'Letter' ? renderLetterImages(true) : (
+            <img src={imagePath} alt={`${item} of the week`} />
+          )}
+          {item === 'Letter' && (
+            <audio ref={audioRef} src={`/assets/letters/music/${content}.mp3`} />
+          )}
         </div>
       );
     }
     return (
       <div className="grid-item" onClick={() => handleItemClick(item)}>
         <h3>{item} of the Week</h3>
-        <p>{content}</p>
+        <div className="image-container">
+          {item === 'Letter' ? renderLetterImages(false) : (
+            <img src={imagePath} alt={`${item} of the week`} />
+          )}
+        </div>
       </div>
     );
   };
 
   return (
-    <div className="grid">
-      {renderGridItem('Letter', weeklyData.letter)}
-      {renderGridItem('Number', weeklyData.number)}
-      {renderGridItem('Color', weeklyData.color)}
-      {renderGridItem('Shape', weeklyData.shape)}
+    <div className="grid-container">
+      <div className="grid">
+        {renderGridItem('Letter', weeklyData.letter)}
+        {renderGridItem('Number', weeklyData.number)}
+        {renderGridItem('Color', weeklyData.color)}
+        {renderGridItem('Shape', weeklyData.shape)}
+      </div>
     </div>
   );
 };
