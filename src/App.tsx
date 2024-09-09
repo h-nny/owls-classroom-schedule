@@ -28,8 +28,13 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <button className="edit-button" onClick={() => setIsEditModalOpen(true)}>
-          Edit
+        <h1>Owl's Classroom Schedule</h1>
+        <button 
+          className="update-layout-button" 
+          onClick={() => setIsEditModalOpen(true)}
+          aria-label="Edit layout"
+        >
+          ✎
         </button>
       </header>
       <div className="App-content">

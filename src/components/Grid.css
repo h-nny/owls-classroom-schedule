@@ -28,8 +28,9 @@
   }
   
   .grid-item h3 {
-    margin: 0 0 15px 0;
-    font-size: 1.2em;
+    margin: -10px 0 15px 0;
+    font-size: 1.5em;
+    font-family: 'CustomFont', sans-serif;
     color: #333;
   }
   
@@ -50,7 +51,7 @@
   
   .letter-images .image-container {
     max-width: calc(20vw - 10px);
-    max-height: 30vh;
+    max-height: 35vh;
   }
   
   .letter-container {
@@ -74,7 +75,7 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     max-width: 40vw;
-    max-height: 30vh;
+    max-height: 35vh;
     display: flex;
     justify-content: center;
     align-items: center;

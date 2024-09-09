@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'CustomFont';
+  src: url('../public/assets/fonts/font.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .App {
   display: flex;
   flex-direction: column;
@@ -7,24 +14,37 @@
 
 .App-header {
   background-color: #282c34;
-  padding: 10px;
+  padding: 10px 20px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  color: white;
 }
 
-.edit-button {
-  background-color: #61dafb;
+.App-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: 'CustomFont', sans-serif;
+}
+
+.update-layout-button {
+  background-color: transparent;
   border: none;
   color: white;
-  padding: 10px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
+  font-size: 24px;
   cursor: pointer;
-  border-radius: 4px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.update-layout-button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .App-content {
