@@ -72,6 +72,11 @@ const EditModal: React.FC<EditModalProps> = ({ initialData, onSave, onClose }) =
                 <option value="Yellow">Yellow</option>
                 <option value="Purple">Purple</option>
                 <option value="Orange">Orange</option>
+                <option value="Pink">Pink</option>
+                <option value="Brown">Brown</option>
+                <option value="Gray">Gray</option>
+                <option value="Black">Black</option>
+                <option value="White">White</option>
               </select>
             </div>
           </div>
@@ -90,6 +95,13 @@ const EditModal: React.FC<EditModalProps> = ({ initialData, onSave, onClose }) =
                 <option value="Rectangle">Rectangle</option>
                 <option value="Oval">Oval</option>
                 <option value="Star">Star</option>
+                <option value="Heart">Heart</option>
+                <option value="Diamond">Diamond</option>
+                <option value="Hexagon">Hexagon</option>
+                <option value="Pentagon">Pentagon</option>
+                <option value="Octagon">Octagon</option>
+                <option value="Rhombus">Rhombus</option>
+                <option value="Trapezoid">Trapezoid</option>
               </select>
             </div>
           </div>

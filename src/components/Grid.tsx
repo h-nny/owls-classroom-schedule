@@ -15,28 +15,52 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
   const [letterImages, setLetterImages] = useState<string[]>([]);
   const audioRef = useRef<HTMLAudioElement>(null);
 
+
   useEffect(() => {
     const fetchLetterImages = async () => {
-      const letter = weeklyData.letter;
-      const img1 = `/assets/letters/images/${letter}/1.png`;
-      const img2 = `/assets/letters/images/${letter}/2.png`;
+      const letter = weeklyData.letter.toUpperCase();
+      const baseUrl = `/assets/letters/images/${letter}/`;
+      const images: string[] = [];
 
-      const results = await Promise.all([
-        fetch(img1).then(res => res.ok ? img1 : null),
-        fetch(img2).then(res => res.ok ? img2 : null)
-      ]);
+      console.log(`Fetching images for letter: ${letter}`);
 
-      setLetterImages(results.filter(Boolean) as string[]);
+      const vowels = ['A', 'E', 'I', 'O', 'U'];
+      const imagesToFetch = vowels.includes(letter) ? 2 : 1;
+
+      for (let i = 1; i <= imagesToFetch; i++) {
+        const imgUrl = `${baseUrl}${i}.png`;
+        try {
+          console.log(`Attempting to fetch: ${imgUrl}`);
+          const response = await fetch(imgUrl);
+          if (response.ok) {
+            console.log(`Successfully fetched: ${imgUrl}`);
+            images.push(imgUrl);
+          } else {
+            console.log(`Image not found: ${imgUrl}`);
+          }
+        } catch (error) {
+          console.error(`Error fetching image ${imgUrl}:`, error);
+        }
+      }
+
+      console.log(`Total images found: ${images.length}`);
+      console.log(`Image URLs:`, images);
+      setLetterImages(images);
     };
 
     fetchLetterImages();
   }, [weeklyData.letter]);
 
+  useEffect(() => {
+    if (expandedItem === 'Letter' && audioRef.current) {
+      audioRef.current.play()
+        .then(() => console.log('Audio playback started automatically'))
+        .catch(error => console.error('Error playing audio automatically:', error));
+    }
+  }, [expandedItem]);
+
   const handleItemClick = (item: string) => {
     setExpandedItem(item);
-    if (item === 'Letter' && audioRef.current) {
-      audioRef.current.play();
-    }
   };
 
   const handleBackClick = () => {
@@ -60,15 +84,21 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
     }
   };
 
-  const renderLetterImages = (isExpanded: boolean) => (
-    <div className={`letter-images ${isExpanded ? 'expanded' : ''}`}>
-      {letterImages.map((img, index) => (
-        <div key={index} className="image-container letter-container">
-          <img src={img} alt={`Letter of the week ${index + 1}`} />
-        </div>
-      ))}
-    </div>
-  );
+  const renderLetterImages = (isExpanded: boolean) => {
+    console.log(`Rendering letter images. Total images: ${letterImages.length}`);
+    return (
+      <div className={`letter-images ${isExpanded ? 'expanded' : ''}`}>
+        {letterImages.map((img, index) => {
+          console.log(`Rendering image ${index + 1}: ${img}`);
+          return (
+            <div key={index} className="image-container letter-container">
+              <img src={img} alt={`Letter of the week ${index + 1}`} />
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
 
   const renderGridItem = (item: string, content: string | number) => {
     const imagePath = getImagePath(item, content);
@@ -83,7 +113,12 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
             <img src={imagePath} alt={`${item} of the week`} />
           )}
           {item === 'Letter' && (
-            <audio ref={audioRef} src={`/assets/letters/music/${content}.mp3`} />
+            <audio 
+              ref={audioRef} 
+              src={`/assets/letters/music/${content}.mp3`}
+              onLoadedMetadata={() => console.log('Audio loaded:', audioRef.current?.src)}
+              onError={(e) => console.error('Audio error:', e)}
+            />
           )}
         </div>
       );
