@@ -1,24 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import Grid from './components/Grid';
+import Schedule from './components/Activity';
+import EditModal from './components/EditModal';
+
+interface WeeklyData {
+  letter: string;
+  number: number;aw
+  color: string;
+  shape: string;
+}
 
 function App() {
+  const [weeklyData, setWeeklyData] = useState<WeeklyData>({
+    letter: 'A',
+    number: 1,
+    color: 'Red',
+    shape: 'Circle',
+  });
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const handleEdit = (newData: WeeklyData) => {
+    setWeeklyData(newData);
+    setIsEditModalOpen(false);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <button className="edit-button" onClick={() => setIsEditModalOpen(true)}>
+          Edit
+        </button>
       </header>
+      <div className="App-content">
+        <Grid weeklyData={weeklyData} />
+        <Schedule />
+      </div>
+      {isEditModalOpen && (
+        <EditModal
+          initialData={weeklyData}
+          onSave={handleEdit}
+          onClose={() => setIsEditModalOpen(false)}
+        />
+      )}
     </div>
   );
 }
