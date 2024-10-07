@@ -124,6 +124,7 @@
   max-width: 45vw; /* Adjust this value as needed */
   max-height: 80vh;
   object-fit: contain;
+  border-radius: 15px;
 }
 
 .back-button {
