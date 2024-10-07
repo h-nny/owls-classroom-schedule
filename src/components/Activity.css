@@ -58,92 +58,113 @@
   background-color: #45a049;
 }
   
-  .activity-list {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: visible;
-  }
-  
-  .activity-item {
-    position: relative;
-    width: 90%;
-    margin: 10px auto;
-    background-color: #ffffff;
-    border-radius: 8px;
-    cursor: move;
-    touch-action: none;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .activity-item:not(:active) {
-    transition: all 0.2s ease;
-  }
-  
-  .activity-item:hover {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  }
+.activity-list {
+  position: relative;
+  width: 100%;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  padding-right: 10px; /* Add some padding for the scrollbar */
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent; /* For Firefox */
+}
 
-  .activity-item.dragging {
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
-  
-  .activity-image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    display: block;
-    border-radius: 8px;
-  }
-  
-  .remove-button {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    width: 24px;
-    height: 24px;
-    background-color: #f44336;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 0;
-    z-index: 10;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-  }
-  
-  .remove-button:hover {
-    background-color: #d32f2f;
-    transform: scale(1.1);
-  }
-  
-  .add-activity-container {
-    margin-top: 20px;
-  }
-  
-  .add-activity-select {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    background-color: #ffffff;
-    color: #333;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  
-  .add-activity-select:hover {
-    border-color: #bdbdbd;
-  }
-  
-  .add-activity-select:focus {
-    outline: none;
-    border-color: #2196F3;
-    box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
-  }
+/* Webkit browsers like Chrome, Safari */
+.activity-list::-webkit-scrollbar {
+  width: 6px;
+  border-radius: 3px;
+}
+
+.activity-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.activity-item {
+  position: relative;
+  width: 90%;
+  margin: 5px auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  cursor: move;
+  touch-action: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  min-height: 50px; /* Set a minimum height for the items */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activity-item:not(:active) {
+  transition: all 0.2s ease;
+}
+
+.activity-item:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.activity-item.dragging {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.activity-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: 8px;
+}
+
+.remove-button {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 24px;
+  height: 24px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.remove-button:hover {
+  background-color: #d32f2f;
+  transform: scale(1.1);
+}
+
+.add-activity-container {
+  margin-top: 10px;
+  flex-shrink: 0;
+}
+
+.add-activity-select {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-activity-select:hover {
+  border-color: #bdbdbd;
+}
+
+.add-activity-select:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}
