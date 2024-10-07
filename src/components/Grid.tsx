@@ -15,7 +15,6 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
   const [letterImages, setLetterImages] = useState<string[]>([]);
   const audioRef = useRef<HTMLAudioElement>(null);
 
-
   useEffect(() => {
     const fetchLetterImages = async () => {
       const letter = weeklyData.letter.toUpperCase();
@@ -89,18 +88,22 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
     }
   };
 
+  const handleImageClick = (event: React.MouseEvent<HTMLDivElement>, item: string) => {
+    // Only trigger if the click is directly on an image
+    if ((event.target as HTMLElement).tagName === 'IMG') {
+      handleItemClick(item);
+    }
+  };
+
   const renderLetterImages = (isExpanded: boolean) => {
     console.log(`Rendering letter images. Total images: ${letterImages.length}`);
     return (
       <div className={`letter-images ${isExpanded ? 'expanded' : ''}`}>
-        {letterImages.map((img, index) => {
-          console.log(`Rendering image ${index + 1}: ${img}`);
-          return (
-            <div key={index} className="image-container letter-container">
-              <img src={img} alt={`Letter of the week ${index + 1}`} />
-            </div>
-          );
-        })}
+        {letterImages.map((img, index) => (
+          <div key={index} className="image-container letter-container">
+            <img src={img} alt={`Letter of the week ${index + 1}`} />
+          </div>
+        ))}
       </div>
     );
   };
@@ -110,16 +113,16 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
     const titleImagePath = `/assets/titles/${item.toLowerCase()}.png`;
 
     return (
-      <div className="grid-item" onClick={() => handleItemClick(item)}>
+      <div className="grid-item">
         <div className="title-image-container">
           <img src={titleImagePath} alt={`${item} of the Week`} className="title-image" />
         </div>
         {item === 'Letter' ? (
-          <div className="letter-wrapper">
+          <div className="letter-wrapper" onClick={(e) => handleImageClick(e, item)}>
             {renderLetterImages(false)}
           </div>
         ) : (
-          <div className="image-container">
+          <div className="image-container" onClick={(e) => handleImageClick(e, item)}>
             <img src={imagePath} alt={`${item} of the week`} />
           </div>
         )}
