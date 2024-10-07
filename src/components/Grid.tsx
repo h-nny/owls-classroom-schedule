@@ -61,6 +61,11 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
 
   const handleItemClick = (item: string) => {
     setExpandedItem(item);
+    if (item === 'Letter' && audioRef.current) {
+      audioRef.current.play()
+        .then(() => console.log('Audio playback started'))
+        .catch(error => console.error('Error playing audio:', error));
+    }
   };
 
   const handleBackClick = () => {
@@ -102,38 +107,51 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
 
   const renderGridItem = (item: string, content: string | number) => {
     const imagePath = getImagePath(item, content);
+    const titleImagePath = `/assets/titles/${item.toLowerCase()}.png`;
 
-    if (expandedItem === item) {
-      return (
-        <div className="expanded-item">
-          <button className="back-button" onClick={handleBackClick}>
-            ←
-          </button>
-          {item === 'Letter' ? renderLetterImages(true) : (
-            <img src={imagePath} alt={`${item} of the week`} />
-          )}
-          {item === 'Letter' && (
-            <audio 
-              ref={audioRef} 
-              src={`/assets/letters/music/${content}.mp3`}
-              onLoadedMetadata={() => console.log('Audio loaded:', audioRef.current?.src)}
-              onError={(e) => console.error('Audio error:', e)}
-            />
-          )}
-        </div>
-      );
-    }
     return (
-      <div className="grid-item">
-        <h3>{item} of the Week</h3>
+      <div className="grid-item" onClick={() => handleItemClick(item)}>
+        <div className="title-image-container">
+          <img src={titleImagePath} alt={`${item} of the Week`} className="title-image" />
+        </div>
         {item === 'Letter' ? (
-          <div className="letter-wrapper" onClick={() => handleItemClick(item)}>
+          <div className="letter-wrapper">
             {renderLetterImages(false)}
           </div>
         ) : (
-          <div className="image-container" onClick={() => handleItemClick(item)}>
+          <div className="image-container">
             <img src={imagePath} alt={`${item} of the week`} />
           </div>
+        )}
+      </div>
+    );
+  };
+
+  const renderBackButton = () => (
+    <button className="back-button" onClick={handleBackClick}>
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>
+    </button>
+  );
+
+  const renderExpandedOverlay = () => {
+    if (!expandedItem) return null;
+
+    const content = weeklyData[expandedItem.toLowerCase() as keyof typeof weeklyData];
+    const imagePath = getImagePath(expandedItem, content);
+
+    return (
+      <div className="expanded-overlay">
+        {renderBackButton()}
+        {expandedItem === 'Letter' ? (
+          <div className="letter-images expanded">
+            {letterImages.map((img, index) => (
+              <img key={index} src={img} alt={`Letter of the week ${index + 1}`} />
+            ))}
+          </div>
+        ) : (
+          <img src={imagePath} alt={`${expandedItem} of the week`} className="expanded-image" />
         )}
       </div>
     );
@@ -147,6 +165,13 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
         {renderGridItem('Color', weeklyData.color)}
         {renderGridItem('Shape', weeklyData.shape)}
       </div>
+      {renderExpandedOverlay()}
+      <audio 
+        ref={audioRef} 
+        src={`/assets/letters/music/${weeklyData.letter}.mp3`}
+        onLoadedMetadata={() => console.log('Audio loaded:', audioRef.current?.src)}
+        onError={(e) => console.error('Audio error:', e)}
+      />
     </div>
   );
 };
