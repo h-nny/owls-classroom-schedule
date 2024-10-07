@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   DndContext,
   closestCenter,
@@ -81,100 +81,106 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
     );
   };
 
-const Schedule: React.FC = () => {
-  const [activities, setActivities] = useState<Activity[]>([
-    { id: '1', content: 'MORNING WORK', image: getImagePath('MORNING WORK') },
-    { id: '2', content: 'CIRCLE', image: getImagePath('CIRCLE') },
-    { id: '3', content: 'RECESS', image: getImagePath('RECESS') },
-  ]);
-  const [isEditing, setIsEditing] = useState(false);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
-
-  const handleRemoveActivity = (id: string) => {
-    setActivities((prevActivities) => prevActivities.filter(activity => activity.id !== id));
+  const Schedule: React.FC = () => {
+    const [activities, setActivities] = useState<Activity[]>(() => {
+      const savedActivities = localStorage.getItem('activities');
+      return savedActivities ? JSON.parse(savedActivities) : [
+        { id: '1', content: 'MORNING WORK', image: getImagePath('MORNING WORK') },
+        { id: '2', content: 'CIRCLE', image: getImagePath('CIRCLE') },
+        { id: '3', content: 'RECESS', image: getImagePath('RECESS') },
+      ];
+    });
+    const [isEditing, setIsEditing] = useState(false);
+  
+    const sensors = useSensors(
+      useSensor(PointerSensor),
+      useSensor(KeyboardSensor, {
+        coordinateGetter: sortableKeyboardCoordinates,
+      })
+    );
+  
+    useEffect(() => {
+      localStorage.setItem('activities', JSON.stringify(activities));
+    }, [activities]);
+  
+    const handleRemoveActivity = (id: string) => {
+      setActivities((prevActivities) => prevActivities.filter(activity => activity.id !== id));
+    };
+    
+    const handleDragEnd = (event: DragEndEvent) => {
+      const { active, over } = event;
+  
+      if (active.id !== over?.id) {
+        setActivities((items) => {
+          const oldIndex = items.findIndex((item) => item.id === active.id);
+          const newIndex = items.findIndex((item) => item.id === over?.id);
+  
+          return arrayMove(items, oldIndex, newIndex);
+        });
+      }
+    };
+  
+    const handleAddActivity = (newActivity: string) => {
+      if (newActivity) {
+        setActivities((prevActivities) => [...prevActivities, { 
+          id: Date.now().toString(), 
+          content: newActivity, 
+          image: getImagePath(newActivity)
+        }]);
+      }
+    };
+  
+    return (
+      <div className="schedule">
+        <div className="schedule-header">
+          <img src="/assets/schedule/our_day.png" alt="Our Day" className="our-day-image" />
+          <button 
+            onClick={() => setIsEditing(!isEditing)} 
+            className={`edit-button ${isEditing ? 'editing' : ''}`} 
+            aria-label="Edit schedule"
+          >
+            {isEditing ? '✓' : '✎'}
+          </button>
+        </div>
+        <DndContext 
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext 
+            items={activities.map(a => a.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="activity-list">
+              {activities.map((activity) => (
+                <SortableItem
+                  key={activity.id}
+                  id={activity.id}
+                  content={activity.content}
+                  image={activity.image}
+                  isEditing={isEditing}
+                  onRemove={handleRemoveActivity}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
+        {isEditing && (
+          <div className="add-activity-container">
+            <select 
+              onChange={(e) => handleAddActivity(e.target.value)} 
+              value=""
+              className="add-activity-select"
+            >
+              <option value="">Add new activity</option>
+              {activityOptions.map((option: string) => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
+          </div>
+        )}
+      </div>
+    );
   };
   
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (active.id !== over?.id) {
-      setActivities((items) => {
-        const oldIndex = items.findIndex((item) => item.id === active.id);
-        const newIndex = items.findIndex((item) => item.id === over?.id);
-
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  };
-
-  const handleAddActivity = (newActivity: string) => {
-    if (newActivity) {
-      setActivities([...activities, { 
-        id: Date.now().toString(), 
-        content: newActivity, 
-        image: getImagePath(newActivity)
-      }]);
-    }
-  };
-
-
-return (
-    <div className="schedule">
-      <div className="schedule-header">
-        <img src="/assets/schedule/our_day.png" alt="Our Day" className="our-day-image" />
-        <button 
-          onClick={() => setIsEditing(!isEditing)} 
-          className={`edit-button ${isEditing ? 'editing' : ''}`} 
-          aria-label="Edit schedule"
-        >
-          {isEditing ? '✓' : '✎'}
-        </button>
-      </div>
-      <DndContext 
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext 
-          items={activities.map(a => a.id)}
-          strategy={verticalListSortingStrategy}
-        >
-          <div className="activity-list">
-            {activities.map((activity) => (
-              <SortableItem
-                key={activity.id}
-                id={activity.id}
-                content={activity.content}
-                image={activity.image}
-                isEditing={isEditing}
-                onRemove={handleRemoveActivity}
-              />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
-      {isEditing && (
-        <div className="add-activity-container">
-          <select 
-            onChange={(e) => handleAddActivity(e.target.value)} 
-            value=""
-            className="add-activity-select"
-          >
-            <option value="">Add new activity</option>
-            {activityOptions.map((option: string) => (
-              <option key={option} value={option}>{option}</option>
-            ))}
-          </select>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default Schedule;
+  export default Schedule;

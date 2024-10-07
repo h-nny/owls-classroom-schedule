@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Grid from './components/Grid';
 import Schedule from './components/Activity';
@@ -12,13 +12,20 @@ interface WeeklyData {
 }
 
 function App() {
-  const [weeklyData, setWeeklyData] = useState<WeeklyData>({
-    letter: 'A',
-    number: 1,
-    color: 'Red',
-    shape: 'Circle',
+  const [weeklyData, setWeeklyData] = useState<WeeklyData>(() => {
+    const savedData = localStorage.getItem('weeklyData');
+    return savedData ? JSON.parse(savedData) : {
+      letter: 'A',
+      number: 1,
+      color: 'Red',
+      shape: 'Circle',
+    };
   });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('weeklyData', JSON.stringify(weeklyData));
+  }, [weeklyData]);
 
   const handleEdit = (newData: WeeklyData) => {
     setWeeklyData(newData);
