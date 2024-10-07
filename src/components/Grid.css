@@ -88,20 +88,22 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px; /* Add gap between images */
+  gap: 10px;
+  height: 100%; /* Ensure full height */
 }
 
 .image-container.letter-container {
-  flex: 0 0 auto; /* Don't grow or shrink, size to content */
+  flex: 1 1 auto; /* Allow growing and shrinking */
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 55%; /* Limit max width to prevent oversizing */
+  max-width: 100%; /* Allow full width for single images */
+  height: 100%; /* Ensure full height */
 }
 
 .image-container.letter-container img {
   max-width: 100%;
-  max-height: 37vh;
+  max-height: 35vh; /* Match the height of other grid items */
   object-fit: contain;
   transition: none;
 }
