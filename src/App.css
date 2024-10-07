@@ -55,7 +55,7 @@
 }
 
 .grid-container {
-  flex: 5;
+  flex: 6;
   overflow: hidden; 
   display: flex;
   justify-content: center;
