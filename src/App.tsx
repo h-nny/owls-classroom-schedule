@@ -7,18 +7,19 @@ import EditModal from './components/EditModal';
 interface WeeklyData {
   letter: string;
   number: number;
-  color: string;
+  colors: string[];  // Changed from color: string
   shape: string;
 }
 
 function App() {
   const [weeklyData, setWeeklyData] = useState<WeeklyData>(() => {
     const savedData = localStorage.getItem('weeklyData');
-    return savedData ? JSON.parse(savedData) : {
-      letter: 'A',
-      number: 1,
-      color: 'Red',
-      shape: 'Circle',
+    const parsedData = savedData ? JSON.parse(savedData) : null;
+    return {
+      letter: parsedData?.letter || 'A',
+      number: parsedData?.number || 1,
+      colors: Array.isArray(parsedData?.colors) ? parsedData.colors : ['Red'],
+      shape: parsedData?.shape || 'Circle',
     };
   });
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

@@ -5,7 +5,7 @@ interface GridProps {
   weeklyData: {
     letter: string;
     number: number;
-    color: string;
+    colors: string[];
     shape: string;
   };
 }
@@ -75,12 +75,13 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
     }
   };
 
-  const getImagePath = (item: string, content: string | number): string => {
+  const getImagePath = (item: string, content: string | number | string[]): string => {
     switch (item) {
       case 'Number':
         return `/assets/numbers/${content}.png`;
       case 'Color':
-        return `/assets/colors/${content}.png`;
+        // If content is an array, use the first color
+        return `/assets/colors/${Array.isArray(content) ? content[0] : content}.png`;
       case 'Shape':
         return `/assets/shapes/${content}.png`;
       default:
@@ -108,8 +109,22 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
     );
   };
 
-  const renderGridItem = (item: string, content: string | number) => {
-    const imagePath = getImagePath(item, content);
+  const renderColorImages = (colors: string[] = [], isExpanded: boolean) => {
+    return (
+      <div className={`color-images ${isExpanded ? 'expanded' : ''}`}>
+        {(colors || []).filter(Boolean).map((color, index) => (
+          <img 
+            key={index}
+            src={`/assets/colors/${color}.png`}
+            alt={`Color ${index + 1}: ${color}`}
+            className={`color-image ${colors.length > 1 ? 'multi' : ''}`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const renderGridItem = (item: string, content: string | number | string[]) => {
     const titleImagePath = `/assets/titles/${item.toLowerCase()}.png`;
 
     return (
@@ -117,13 +132,17 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
         <div className="title-image-container">
           <img src={titleImagePath} alt={`${item} of the Week`} className="title-image" />
         </div>
-        {item === 'Letter' ? (
+        {item === 'Color' ? (
+          <div className="color-wrapper" onClick={(e) => handleImageClick(e, item)}>
+            {renderColorImages(content as string[] || [], false)}
+          </div>
+        ) : item === 'Letter' ? (
           <div className="letter-wrapper" onClick={(e) => handleImageClick(e, item)}>
             {renderLetterImages(false)}
           </div>
         ) : (
           <div className="image-container" onClick={(e) => handleImageClick(e, item)}>
-            <img src={imagePath} alt={`${item} of the week`} />
+            <img src={getImagePath(item, content as string | number)} alt={`${item} of the week`} />
           </div>
         )}
       </div>
@@ -141,9 +160,16 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
   const renderExpandedOverlay = () => {
     if (!expandedItem) return null;
 
-    const content = weeklyData[expandedItem.toLowerCase() as keyof typeof weeklyData];
-    const imagePath = getImagePath(expandedItem, content);
+    if (expandedItem === 'Color') {
+      return (
+        <div className="expanded-overlay">
+          {renderBackButton()}
+          {renderColorImages(weeklyData.colors, true)}
+        </div>
+      );
+    }
 
+    const content = weeklyData[expandedItem.toLowerCase() as keyof typeof weeklyData];
     return (
       <div className="expanded-overlay">
         {renderBackButton()}
@@ -154,7 +180,11 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
             ))}
           </div>
         ) : (
-          <img src={imagePath} alt={`${expandedItem} of the week`} className="expanded-image" />
+          <img 
+            src={getImagePath(expandedItem, content as string | number)} 
+            alt={`${expandedItem} of the week`} 
+            className="expanded-image" 
+          />
         )}
       </div>
     );
@@ -165,7 +195,7 @@ const Grid: React.FC<GridProps> = ({ weeklyData }) => {
       <div className="grid">
         {renderGridItem('Letter', weeklyData.letter)}
         {renderGridItem('Number', weeklyData.number)}
-        {renderGridItem('Color', weeklyData.color)}
+        {renderGridItem('Color', weeklyData.colors)}
         {renderGridItem('Shape', weeklyData.shape)}
       </div>
       {renderExpandedOverlay()}

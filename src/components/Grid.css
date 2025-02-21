@@ -16,17 +16,18 @@
 }
 
 .grid-item {
-  padding: 10px;
+  padding: 20px;  /* Increased padding */
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
+  height: 45vh;  /* Fixed height for consistent sizing */
 }
 
 .title-image-container {
-  margin-bottom: 10px;
-  max-width: 60%;
-  height: 6vh;
+  margin-bottom: 15px;  /* Increased margin */
+  max-width: 70%;      /* Increased width */
+  height: 8vh;         /* Increased height */
 }
 
 .title-image {
@@ -51,6 +52,16 @@
   border-radius: 10px;
 }
 
+.image-container img,
+.color-wrapper img,
+.letter-wrapper img {
+  max-height: 30vh;    /* Increased max height */
+  min-height: 25vh;    /* Added minimum height */
+  width: auto;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
 .expanded-overlay {
   position: fixed;
   top: 0;
@@ -62,12 +73,15 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 40px; /* Increased padding for more space */
 }
 
 .expanded-image, .letter-images.expanded img {
-  max-width: 80vw;
-  max-height: 80vh;
+  max-width: 90vw;     /* Increased expanded view size */
+  max-height: 90vh;
   object-fit: contain;
+  width: auto;         /* Added to maintain aspect ratio */
+  height: auto;        /* Added to maintain aspect ratio */
 }
 
 .letter-wrapper {
@@ -118,11 +132,12 @@
   justify-content: center;
   align-items: center;
   gap: 20px;
+  width: 90vw;        /* Added to control overall width */
 }
 
 .letter-images.expanded img {
-  max-width: 45vw; /* Adjust this value as needed */
-  max-height: 80vh;
+  max-width: 42vw;    /* Slightly reduced from 45vw to account for gap */
+  max-height: 90vh;   /* Increased from 80vh */
   object-fit: contain;
   border-radius: 15px;
 }
@@ -148,4 +163,60 @@
 .back-button:hover {
   background-color: #f0f0f000;
   transform: scale(1.2);
+}
+
+.color-images {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.color-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;          /* Increased gap between multiple colors */
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.3s ease;
+}
+
+.color-wrapper:hover {
+  transform: scale(1.05);
+}
+
+.color-image.multi {
+  max-height: 28vh;    /* Slightly smaller for multiple colors */
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.color-wrapper:hover .color-image {
+  transform: scale(1.02); /* Subtle individual image hover effect */
+}
+
+.expanded .color-image.multi {
+  max-height: 90vh;   /* Set a large max-height */
+  height: 80vh;       /* Set a fixed height */
+  width: auto;        /* Let width adjust automatically */
+  object-fit: contain;
+  margin: 0 20px;     /* Add some spacing between images */
+}
+
+/* Remove these conflicting rules if they exist elsewhere in your CSS */
+.color-image.multi {
+  width: auto;        /* Override any fixed width */
+  max-width: none;    /* Remove max-width restriction */
+}
+
+.expanded .color-image.multi {
+  width: auto;        /* Override any fixed width */
+  max-width: none;    /* Remove max-width restriction */
+}
+
+.expanded-image, 
+.letter-images.expanded img {
+  max-width: 90vw;     /* Increased expanded view size */
+  max-height: 90vh;
 }

@@ -5,10 +5,10 @@ interface EditModalProps {
   initialData: {
     letter: string;
     number: number;
-    color: string;
+    colors: string[];
     shape: string;
   };
-  onSave: (newData: { letter: string; number: number; color: string; shape: string }) => void;
+  onSave: (newData: { letter: string; number: number; colors: string[]; shape: string }) => void;
   onClose: () => void;
 }
 
@@ -17,7 +17,14 @@ const EditModal: React.FC<EditModalProps> = ({ initialData, onSave, onClose }) =
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: name === 'number' ? parseInt(value) : value });
+    if (name.startsWith('color')) {
+      const index = parseInt(name.slice(-1)) - 1;
+      const newColors = [...formData.colors];
+      newColors[index] = value;
+      setFormData({ ...formData, colors: newColors });
+    } else {
+      setFormData({ ...formData, [name]: name === 'number' ? parseInt(value) : value });
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -58,26 +65,50 @@ const EditModal: React.FC<EditModalProps> = ({ initialData, onSave, onClose }) =
             </div>
           </div>
           <div className="form-group">
-            <label htmlFor="color">Color:</label>
-            <div className="input-wrapper">
-              <select
-                id="color"
-                name="color"
-                value={formData.color}
-                onChange={handleChange}
-              >
-                <option value="Red">Red</option>
-                <option value="Blue">Blue</option>
-                <option value="Green">Green</option>
-                <option value="Yellow">Yellow</option>
-                <option value="Purple">Purple</option>
-                <option value="Orange">Orange</option>
-                <option value="Pink">Pink</option>
-                <option value="Brown">Brown</option>
-                <option value="Gray">Gray</option>
-                <option value="Black">Black</option>
-                <option value="White">White</option>
-              </select>
+            <label>Colors (up to 2):</label>
+            <div className="colors-wrapper">
+              <div className="input-wrapper">
+                <select
+                  id="color1"
+                  name="color1"
+                  value={formData.colors[0] || ''}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Color 1</option>
+                  <option value="Red">Red</option>
+                  <option value="Blue">Blue</option>
+                  <option value="Green">Green</option>
+                  <option value="Yellow">Yellow</option>
+                  <option value="Purple">Purple</option>
+                  <option value="Orange">Orange</option>
+                  <option value="Pink">Pink</option>
+                  <option value="Brown">Brown</option>
+                  <option value="Gray">Gray</option>
+                  <option value="Black">Black</option>
+                  <option value="White">White</option>
+                </select>
+              </div>
+              <div className="input-wrapper">
+                <select
+                  id="color2"
+                  name="color2"
+                  value={formData.colors[1] || ''}
+                  onChange={handleChange}
+                >
+                  <option value="">Select Color 2 (Optional)</option>
+                  <option value="Red">Red</option>
+                  <option value="Blue">Blue</option>
+                  <option value="Green">Green</option>
+                  <option value="Yellow">Yellow</option>
+                  <option value="Purple">Purple</option>
+                  <option value="Orange">Orange</option>
+                  <option value="Pink">Pink</option>
+                  <option value="Brown">Brown</option>
+                  <option value="Gray">Gray</option>
+                  <option value="Black">Black</option>
+                  <option value="White">White</option>
+                </select>
+              </div>
             </div>
           </div>
           <div className="form-group">
