@@ -86,6 +86,7 @@ const EditModal: React.FC<EditModalProps> = ({ initialData, onSave, onClose }) =
                   <option value="Gray">Gray</option>
                   <option value="Black">Black</option>
                   <option value="White">White</option>
+                  <option value="Rainbow">Rainbow</option>
                 </select>
               </div>
               <div className="input-wrapper">
@@ -107,6 +108,7 @@ const EditModal: React.FC<EditModalProps> = ({ initialData, onSave, onClose }) =
                   <option value="Gray">Gray</option>
                   <option value="Black">Black</option>
                   <option value="White">White</option>
+                  <option value="Rainbow">Rainbow</option>
                 </select>
               </div>
             </div>
