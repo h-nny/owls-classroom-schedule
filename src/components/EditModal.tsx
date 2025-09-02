@@ -59,7 +59,7 @@ const EditModal: React.FC<EditModalProps> = ({ initialData, onSave, onClose }) =
                 name="number"
                 value={formData.number}
                 onChange={handleChange}
-                min={1}
+                min={0}
                 max={20}
               />
             </div>
