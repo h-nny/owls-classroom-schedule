@@ -14,10 +14,8 @@
 
 .schedule-header {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 12px;
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 2px solid #e0e0e0;
@@ -26,22 +24,27 @@
 .our-day-image {
   max-width: 12vw;
   height: auto;
+  margin-bottom: 10px;
 }
 
 .edit-button {
-  flex-shrink: 0;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 20;
   border: none;
-  font-size: 20px;
+  font-size: 18px;
   cursor: pointer;
-  padding: 8px;
-  background-color: #ececec;
+  padding: 0;
+  background-color: #ffffff;
   width: 34px;
   height: 34px;
   display: flex;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  transition: all 0.3s ease;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
   color: #777;
 }
 
