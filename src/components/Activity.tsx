@@ -69,9 +69,10 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
     };
   
     return (
-      <div 
-        ref={setNodeRef} 
-        style={style} 
+      <div
+        ref={setNodeRef}
+        id={`sortable-${id}`}
+        style={style}
         className={`activity-item ${isDragging ? 'dragging' : ''}`}
       >
         <div {...attributes} {...listeners} style={{ width: '100%', height: '100%' }}>
@@ -115,9 +116,11 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
     };
     
     const handleDragStart = (event: DragStartEvent) => {
-      setActiveId(event.active.id as string);
-      const rect = event.active.rect.current.initial;
-      if (rect) {
+      const id = event.active.id as string;
+      setActiveId(id);
+      const node = document.getElementById(`sortable-${id}`);
+      if (node) {
+        const rect = node.getBoundingClientRect();
         setActiveSize({ width: rect.width, height: rect.height });
       }
     };
