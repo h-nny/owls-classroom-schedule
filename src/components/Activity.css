@@ -69,29 +69,35 @@
   display: flex;
   flex-direction: column;
   overflow-y: scroll; /* always show the scrollbar */
-  padding-right: 10px; /* Add some padding for the scrollbar */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.25) transparent; /* For Firefox */
+  max-height: 100%;
+  padding-right: 6px;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.08); /* Firefox: thumb / track */
 }
 
-/* Webkit browsers like Chrome, Safari */
+/* Webkit browsers like Chrome, Safari — force a classic, non-overlay bar */
 .activity-list::-webkit-scrollbar {
-  width: 6px;
-  border-radius: 3px;
+  -webkit-appearance: none;
+  width: 10px;
 }
 
 .activity-list::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.06);
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 5px;
 }
 
 .activity-list::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.25);
-  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 5px;
+  min-height: 32px;
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .activity-list::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.5);
+  background-clip: content-box;
 }
 
 .activity-item {
