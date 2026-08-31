@@ -1,6 +1,7 @@
 .schedule {
   position: relative;
   height: 100%;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   padding: 20px;
@@ -8,12 +9,15 @@
   background-color: #f9f9f9;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .schedule-header {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
+  gap: 12px;
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 2px solid #e0e0e0;
@@ -22,21 +26,17 @@
 .our-day-image {
   max-width: 12vw;
   height: auto;
-  margin-bottom: 10px;
 }
 
 .edit-button {
-  position: absolute;
-  background-color: transparent;
+  flex-shrink: 0;
   border: none;
-  top: 4px;
-  right: 4px;
   font-size: 20px;
   cursor: pointer;
   padding: 8px;
-  background-color: #f9f9f9;
-  width: 30px;
-  height: 30px;
+  background-color: #ececec;
+  width: 34px;
+  height: 34px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -61,13 +61,14 @@
 .activity-list {
   position: relative;
   width: 100%;
-  flex-grow: 1;
+  flex: 1 1 auto;
+  min-height: 0; /* allow the flex child to shrink so overflow-y engages */
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   padding-right: 10px; /* Add some padding for the scrollbar */
   scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: rgba(0, 0, 0, 0.1) transparent; /* For Firefox */
+  scrollbar-color: rgba(0, 0, 0, 0.25) transparent; /* For Firefox */
 }
 
 /* Webkit browsers like Chrome, Safari */
@@ -78,6 +79,15 @@
 
 .activity-list::-webkit-scrollbar-track {
   background: transparent;
+}
+
+.activity-list::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 3px;
+}
+
+.activity-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.4);
 }
 
 .activity-item {
@@ -118,8 +128,8 @@
 
 .remove-button {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: 4px;
+  right: 4px;
   width: 24px;
   height: 24px;
   background-color: #f44336;
