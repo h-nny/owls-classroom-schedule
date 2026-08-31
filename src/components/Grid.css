@@ -196,26 +196,29 @@
   transform: scale(1.02); /* Subtle individual image hover effect */
 }
 
+/* Expanded color view — single color */
+.color-images.expanded .color-image {
+  max-height: 80vh;
+  max-width: 90vw;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+}
+
 .expanded .color-image.multi {
-  max-height: 90vh;   /* Set a large max-height */
-  height: 80vh;       /* Set a fixed height */
+  max-height: 80vh;   /* Cap height */
+  max-width: 42vw;    /* Cap width so multiple fit side by side */
+  height: auto;       /* Let height adjust automatically */
   width: auto;        /* Let width adjust automatically */
   object-fit: contain;
   margin: 0 20px;     /* Add some spacing between images */
 }
 
-/* Remove these conflicting rules if they exist elsewhere in your CSS */
 .color-image.multi {
   width: auto;        /* Override any fixed width */
-  max-width: none;    /* Remove max-width restriction */
 }
 
-.expanded .color-image.multi {
-  width: auto;        /* Override any fixed width */
-  max-width: none;    /* Remove max-width restriction */
-}
-
-.expanded-image, 
+.expanded-image,
 .letter-images.expanded img {
   max-width: 90vw;     /* Increased expanded view size */
   max-height: 90vh;
