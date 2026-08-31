@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   DndContext,
+  DragOverlay,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
   DragEndEvent,
+  DragStartEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -56,7 +59,7 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
       transform: CSS.Transform.toString(transform),
       transition,
       zIndex: isDragging ? 1 : 'auto',
-      opacity: isDragging ? 0.8 : 1,
+      opacity: isDragging ? 0.4 : 1,
     };
   
     const handleRemove = (e: React.MouseEvent) => {
@@ -91,7 +94,10 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
       ];
     });
     const [isEditing, setIsEditing] = useState(false);
-  
+    const [activeId, setActiveId] = useState<string | null>(null);
+
+    const activeActivity = activities.find((a) => a.id === activeId) || null;
+
     const sensors = useSensors(
       useSensor(PointerSensor),
       useSensor(KeyboardSensor, {
@@ -107,9 +113,14 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
       setActivities((prevActivities) => prevActivities.filter(activity => activity.id !== id));
     };
     
+    const handleDragStart = (event: DragStartEvent) => {
+      setActiveId(event.active.id as string);
+    };
+
     const handleDragEnd = (event: DragEndEvent) => {
       const { active, over } = event;
-  
+      setActiveId(null);
+
       if (active.id !== over?.id) {
         setActivities((items) => {
           const oldIndex = items.findIndex((item) => item.id === active.id);
@@ -142,12 +153,14 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
             {isEditing ? '✓' : '✎'}
           </button>
         </div>
-        <DndContext 
+        <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
+          onDragCancel={() => setActiveId(null)}
         >
-          <SortableContext 
+          <SortableContext
             items={activities.map(a => a.id)}
             strategy={verticalListSortingStrategy}
           >
@@ -164,6 +177,20 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
               ))}
             </div>
           </SortableContext>
+          {createPortal(
+            <DragOverlay>
+              {activeActivity ? (
+                <div className="activity-item activity-item--overlay">
+                  <img
+                    src={activeActivity.image}
+                    alt={activeActivity.content}
+                    className="activity-image"
+                  />
+                </div>
+              ) : null}
+            </DragOverlay>,
+            document.body
+          )}
         </DndContext>
         {isEditing && (
           <div className="add-activity-container">
