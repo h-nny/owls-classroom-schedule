@@ -95,6 +95,7 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
     });
     const [isEditing, setIsEditing] = useState(false);
     const [activeId, setActiveId] = useState<string | null>(null);
+    const [activeSize, setActiveSize] = useState<{ width: number; height: number } | null>(null);
 
     const activeActivity = activities.find((a) => a.id === activeId) || null;
 
@@ -115,11 +116,16 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
     
     const handleDragStart = (event: DragStartEvent) => {
       setActiveId(event.active.id as string);
+      const rect = event.active.rect.current.initial;
+      if (rect) {
+        setActiveSize({ width: rect.width, height: rect.height });
+      }
     };
 
     const handleDragEnd = (event: DragEndEvent) => {
       const { active, over } = event;
       setActiveId(null);
+      setActiveSize(null);
 
       if (active.id !== over?.id) {
         setActivities((items) => {
@@ -158,7 +164,7 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
           collisionDetection={closestCenter}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
-          onDragCancel={() => setActiveId(null)}
+          onDragCancel={() => { setActiveId(null); setActiveSize(null); }}
         >
           <SortableContext
             items={activities.map(a => a.id)}
@@ -180,7 +186,10 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
           {createPortal(
             <DragOverlay>
               {activeActivity ? (
-                <div className="activity-item activity-item--overlay">
+                <div
+                  className="activity-item activity-item--overlay"
+                  style={activeSize ? { width: activeSize.width, height: activeSize.height } : undefined}
+                >
                   <img
                     src={activeActivity.image}
                     alt={activeActivity.content}

@@ -124,8 +124,8 @@
 /* Floating copy rendered in a body-level portal so it is never clipped
    by the schedule panel or the scrollable list. */
 .activity-item--overlay {
-  width: 260px;
   margin: 0;
+  box-sizing: border-box;
   cursor: grabbing;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
 }
