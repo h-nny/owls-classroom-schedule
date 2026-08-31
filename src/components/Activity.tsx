@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import {
   DndContext,
@@ -100,6 +100,76 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
 
     const activeActivity = activities.find((a) => a.id === activeId) || null;
 
+    const listRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+    const [thumb, setThumb] = useState({ height: 0, top: 0 });
+
+    const syncThumb = useCallback(() => {
+      const el = listRef.current;
+      const track = trackRef.current;
+      if (!el || !track) return;
+      const { scrollTop, scrollHeight, clientHeight } = el;
+      const trackH = track.clientHeight;
+      const ratio = scrollHeight > 0 ? clientHeight / scrollHeight : 1;
+      const thumbH = Math.max(Math.min(ratio, 1) * trackH, 28);
+      const maxScroll = scrollHeight - clientHeight;
+      const maxThumbTop = trackH - thumbH;
+      const top = maxScroll > 0 ? (scrollTop / maxScroll) * maxThumbTop : 0;
+      setThumb({ height: thumbH, top });
+    }, []);
+
+    useLayoutEffect(() => {
+      syncThumb();
+    }, [activities, isEditing, syncThumb]);
+
+    useEffect(() => {
+      const el = listRef.current;
+      if (!el) return;
+      const ro = new ResizeObserver(syncThumb);
+      ro.observe(el);
+      Array.from(el.children).forEach((c) => ro.observe(c));
+      window.addEventListener('resize', syncThumb);
+      return () => {
+        ro.disconnect();
+        window.removeEventListener('resize', syncThumb);
+      };
+    }, [activities, syncThumb]);
+
+    const handleThumbPointerDown = (e: React.PointerEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const el = listRef.current;
+      const track = trackRef.current;
+      if (!el || !track) return;
+      const startY = e.clientY;
+      const startScroll = el.scrollTop;
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      const maxThumbTop = track.clientHeight - thumb.height;
+      const onMove = (ev: PointerEvent) => {
+        const dy = ev.clientY - startY;
+        el.scrollTop = maxThumbTop > 0 ? startScroll + (dy / maxThumbTop) * maxScroll : startScroll;
+      };
+      const onUp = () => {
+        window.removeEventListener('pointermove', onMove);
+        window.removeEventListener('pointerup', onUp);
+      };
+      window.addEventListener('pointermove', onMove);
+      window.addEventListener('pointerup', onUp);
+    };
+
+    const handleTrackPointerDown = (e: React.PointerEvent) => {
+      const el = listRef.current;
+      const track = trackRef.current;
+      if (!el || !track) return;
+      if (e.target !== track) return;
+      const rect = track.getBoundingClientRect();
+      const clickY = e.clientY - rect.top - thumb.height / 2;
+      const maxThumbTop = track.clientHeight - thumb.height;
+      const maxScroll = el.scrollHeight - el.clientHeight;
+      const clamped = Math.max(0, Math.min(clickY, maxThumbTop));
+      el.scrollTop = maxThumbTop > 0 ? (clamped / maxThumbTop) * maxScroll : 0;
+    };
+
     const sensors = useSensors(
       useSensor(PointerSensor),
       useSensor(KeyboardSensor, {
@@ -173,17 +243,30 @@ const SortableItem: React.FC<SortableItemProps> = ({ id, content, image, isEditi
             items={activities.map(a => a.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="activity-list">
-              {activities.map((activity) => (
-                <SortableItem
-                  key={activity.id}
-                  id={activity.id}
-                  content={activity.content}
-                  image={activity.image}
-                  isEditing={isEditing}
-                  onRemove={handleRemoveActivity}
+            <div className="activity-scroll">
+              <div className="activity-list" ref={listRef} onScroll={syncThumb}>
+                {activities.map((activity) => (
+                  <SortableItem
+                    key={activity.id}
+                    id={activity.id}
+                    content={activity.content}
+                    image={activity.image}
+                    isEditing={isEditing}
+                    onRemove={handleRemoveActivity}
+                  />
+                ))}
+              </div>
+              <div
+                className="custom-scrollbar"
+                ref={trackRef}
+                onPointerDown={handleTrackPointerDown}
+              >
+                <div
+                  className="custom-scrollbar__thumb"
+                  style={{ height: thumb.height, transform: `translateY(${thumb.top}px)` }}
+                  onPointerDown={handleThumbPointerDown}
                 />
-              ))}
+              </div>
             </div>
           </SortableContext>
           {createPortal(
